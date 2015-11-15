@@ -11,8 +11,8 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         app_handlers = [
+            ('/', handlers.api.APIHandler),
             ('/ping', handlers.ping.PingHandler),
-            ('/api', handlers.api.APIHandler),
         ]
         app_settings = {
             'debug': True

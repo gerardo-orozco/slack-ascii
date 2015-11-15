@@ -1,7 +1,7 @@
 set -e
 
 if [[ -z "$DATABASE_URL" ]]; then
-    echo "ERROR: DATABASE_URL needs to be defined and not empty"
+    echo "ERROR: DATABASE_URL environment variable needs to be defined and not empty"
     exit 1
 fi
 

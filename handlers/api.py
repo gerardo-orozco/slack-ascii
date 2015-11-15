@@ -1,12 +1,10 @@
 # -*- coding: utf8 -*-
 import json
-import logging
 import os
-
 import tornado.gen
 import tornado.web
-
 from slackclient import SlackClient
+import emoticon_api
 
 EMOTICONS = {
     'shrug': u'¯\\_(ツ)_/¯'
@@ -15,10 +13,6 @@ SLACK_TEAM_API_TOKEN = os.environ['SLACK_TEAM_API_TOKEN']
 
 
 class APIHandler(tornado.web.RequestHandler):
-
-    def error_response(self, body=None, status_code=500):
-        self.set_status(500)
-        self.finish(body)
 
     def help_message(self):
         message = 'Available emoticons:\n'
@@ -29,18 +23,32 @@ class APIHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def post(self):
         slack = SlackClient(SLACK_TEAM_API_TOKEN)
-        text = self.get_argument('text')
+        text = self.get_argument('text').split(' ')
+        text = [o for o in text if o]  # remove empty strings
+        name, text = text[0], text[1:]
 
-        if text == 'help':
-            self.finish(self.help_message())
+        if name == 'help':
+            return self.finish(self.help_message())
 
+        elif name == 'add':
+            name, content = text[0], ' '.join(text[1:])
+            if not content:  # not exactly two "arguments"
+                message = 'Please specify a name and the emoticon ' \
+                    'text. Example: `/ascii add foo (o_o)`'
+            else:
+                message = emoticon_api.create(name, content)
+            return self.finish(message)
+
+        # default to fetch an emoticon
         try:
-            emoticon = EMOTICONS[text]
+            emoticon = EMOTICONS[name]
         except KeyError:
-            error_message = '`%s` not found. Enter `%s help` for a list of ' \
-                'available ASCII emoticons'
+            error_message = 'Emoticon `%s` not found. Enter `%s help` ' \
+                'for a list of available ASCII emoticons'
             command_name = self.get_argument('command')
-            self.error_response(error_message % (text, command_name))
+            error_message = error_message % (name, command_name)
+            self.finish(error_message)
+            return
 
         channel_id = self.get_argument('channel_id')
         user_token = self.get_argument('token')
