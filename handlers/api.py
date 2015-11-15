@@ -31,24 +31,17 @@ class APIHandler(tornado.web.RequestHandler):
             return self.finish(self.help_message())
 
         elif name == 'add':
-            name, content = text[0], ' '.join(text[1:])
-            if not content:  # not exactly two "arguments"
-                message = 'Please specify a name and the emoticon ' \
-                    'text. Example: `/ascii add foo (o_o)`'
-            else:
-                message = emoticon_api.create(name, content)
+            message = emoticon_api.create(*text)
             return self.finish(message)
 
         # default to fetch an emoticon
-        try:
-            emoticon = EMOTICONS[name]
-        except KeyError:
-            error_message = 'Emoticon `%s` not found. Enter `%s help` ' \
+        message = emoticon_api.get(name, *text)
+        if message is None:
+            message = 'Emoticon `%s` not found. Enter `%s help` ' \
                 'for a list of available ASCII emoticons'
             command_name = self.get_argument('command')
-            error_message = error_message % (name, command_name)
-            self.finish(error_message)
-            return
+            message = message % (name, command_name)
+            return self.finish(message)
 
         channel_id = self.get_argument('channel_id')
         user_token = self.get_argument('token')
