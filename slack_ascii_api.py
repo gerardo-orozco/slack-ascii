@@ -4,6 +4,7 @@ import tornado.httpserver
 import tornado.web
 
 import handlers.ping
+import handlers.api
 
 
 class Application(tornado.web.Application):
@@ -11,6 +12,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         app_handlers = [
             ('/ping', handlers.ping.PingHandler),
+            ('/api', handlers.api.APIHandler),
         ]
         app_settings = {
             'debug': True
