@@ -34,6 +34,10 @@ class APIHandler(tornado.web.RequestHandler):
             message = emoticon_api.create(*text)
             return self.finish(message)
 
+        elif name in 'rm':
+            message = emoticon_api.remove(*text)
+            return self.finish(message)
+
         # default to fetch an emoticon
         message = emoticon_api.get(name, *text)
         if message is None:
@@ -48,7 +52,7 @@ class APIHandler(tornado.web.RequestHandler):
         slack.api_call('chat.postMessage', **{
             'token': user_token,
             'channel': channel_id,
-            'text': emoticon.encode('utf-8'),
+            'text': message.encode('utf-8'),
             'as_user': True,
         })
         self.finish()

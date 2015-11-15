@@ -24,3 +24,10 @@ def get(*args):
 
     emoticon = '%s %s' % (emoticon, additional_text)
     return emoticon
+
+
+def remove(*args):
+    if not args:
+        return 'Indicate the name of the emoticon or alias to remove'
+    db.remove_emoticon_or_alias(args[0])
+    return 'Removed `%s`' % args[0]
