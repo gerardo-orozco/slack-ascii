@@ -38,6 +38,10 @@ class APIHandler(tornado.web.RequestHandler):
             message = emoticon_api.remove(*text)
             return self.finish(message)
 
+        elif name == 'set':
+            message = emoticon_api.replace(*text)
+            return self.finish(message)
+
         # default to fetch an emoticon
         message = emoticon_api.get(name, *text)
         if message is None:

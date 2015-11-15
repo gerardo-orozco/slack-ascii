@@ -51,3 +51,13 @@ def remove_emoticon_or_alias(name):
     else:
         cursor.execute("DELETE FROM emoticon_alias WHERE name = %(name)s", {'name': name})
     conn.commit()
+
+
+def replace_emoticon(name, content):
+    conn = get_connection()
+    cursor = conn.cursor()
+    sql = "UPDATE emoticon SET content = %(content)s WHERE name = %(name)s RETURNING id"
+    cursor.execute(sql, {'content': content, 'name': name})
+    updated = bool(cursor.fetchone())
+    conn.commit()
+    return updated

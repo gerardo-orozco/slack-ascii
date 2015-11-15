@@ -31,3 +31,15 @@ def remove(*args):
         return 'Indicate the name of the emoticon or alias to remove'
     db.remove_emoticon_or_alias(args[0])
     return 'Removed `%s`' % args[0]
+
+
+def replace(*args):
+    name, content = args[0], ' '.join(args[1:])
+    if not content:  # not exactly two "arguments"
+        return 'Please specify a name and the emoticon ' \
+            'text. Example: `/ascii set foo (o_o)`'
+
+    updated = db.replace_emoticon(name, content)
+    if updated:
+        return 'Updated `%s`' % name
+    return '`%s` does not exist. Are you using an alias?' % name
