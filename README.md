@@ -1,5 +1,7 @@
 # slack-ascii
 
+> STILL A WORK IN PROGRESS
+
 Because sometimes emoji just won't do it! Try `slack-ascii` and bring your
 own ASCII emoticons to your Slack team!
 
@@ -93,5 +95,6 @@ After meeting these requirements, you are good to start hacking!
 
 ## Contributing
 
-Have an idea of how to improve this app, go on, add an issue, or even better
-send me a Pull Request :)
+Have an idea of how to improve this app?
+[Add an issue](https://github.com/gerardo-orozco/slack-ascii/issues/new),
+or even better, send a Pull Request :)
