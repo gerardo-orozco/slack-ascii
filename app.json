@@ -1,0 +1,22 @@
+{
+  "name": "slack-ascii",
+  "description": "Custom ASCII for Slack",
+  "repository": "https://github.com/gerardo-orozco/slack-ascii",
+  "keywords": [
+    "slack",
+    "ascii",
+    "emoji",
+    "emoticon"
+  ],
+  "env": {
+    "SLACK_TEAM_API_TOKEN": {
+      "description": "Slack Web API token for the team."
+    }
+  },
+  "addons": [
+    "heroku-postgresql:hobby-dev"
+  ],
+  "scripts": {
+    "postdeploy": "./scripts/migrate.sh"
+  }
+}

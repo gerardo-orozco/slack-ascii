@@ -31,7 +31,9 @@ First click the button below. That will open a new tab in Heroku to start config
 this application for deployment. For now, keep that tab open, we will get back to it
 later with the configuration values.
 
-> Heroku deploy button here
+<a href="https://heroku.com/deploy" target="_blank">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
 
 ### Getting a Slack Web API Token
 
