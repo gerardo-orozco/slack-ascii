@@ -29,17 +29,27 @@ def create_emoticon(name, content):
     return last_id
 
 
+def create_alias(emoticon_id, alias):
+    conn = get_connection()
+    cursor = conn.cursor()
+    sql = "INSERT INTO emoticon_alias (emoticon_id, name) VALUES (%s, %s) RETURNING id"
+    cursor.execute(sql, (emoticon_id, alias))
+    last_id = cursor.fetchone()[0]
+    conn.commit()
+    return last_id
+
+
 def get_emoticon(name_or_alias):
     conn = get_connection()
     cursor = conn.cursor()
-    sql = """SELECT e.content
+    sql = """SELECT e.id, e.content
     FROM emoticon e LEFT JOIN emoticon_alias ea ON e.id = ea.emoticon_id
     WHERE e.name = %(name_or_alias)s OR ea.name = %(name_or_alias)s
     LIMIT 1"""
     cursor.execute(sql, {'name_or_alias': name_or_alias})
     emoticon = cursor.fetchone()
     if emoticon:
-        return emoticon[0]
+        return {'id': emoticon[0], 'content': emoticon[1]}
 
 
 def remove_emoticon_or_alias(name):
@@ -61,3 +71,22 @@ def replace_emoticon(name, content):
     updated = bool(cursor.fetchone())
     conn.commit()
     return updated
+
+
+def get_help_info():
+    conn = get_connection()
+    cursor = conn.cursor()
+    sql = """SELECT e.name, e.content, a.name
+    FROM emoticon e LEFT JOIN emoticon_alias a on e.id = a.emoticon_id"""
+    cursor.execute(sql)
+    aliases_by_name = {}
+    for name, content, alias in cursor.fetchall():
+        if name not in aliases_by_name:
+            aliases_by_name[name] = {
+                'aliases': [],
+                'content': content
+            }
+        if alias:
+            aliases_by_name[name]['aliases'].append(alias)
+
+    return aliases_by_name
