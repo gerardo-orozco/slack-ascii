@@ -13,6 +13,7 @@ COMMENT ON COLUMN emoticon.content IS 'emoticon text content';
 COMMENT ON COLUMN emoticon.created_at IS 'when an emoticon was added';
 
 
+-- emoticon_alias
 CREATE TABLE IF NOT EXISTS emoticon_alias (
     id SERIAL NOT NULL PRIMARY KEY,
     emoticon_id INT NOT NULL,

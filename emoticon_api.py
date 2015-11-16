@@ -73,8 +73,10 @@ class EmoticonAPI(object):
 
     def get_help_message(self):
         aliases_by_name = db.get_help_info()
+        if not aliases_by_name:
+            return 'Sorry, there are no emoticons loaded yet :-('
+
         message = ''
-        # msg_line = '*%s*: %s\n> aliases: %s\n'
         for name, emoticon in aliases_by_name.iteritems():
             # start with the emoticon name
             msg_line = '*%s*' % name

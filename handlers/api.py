@@ -8,6 +8,10 @@ from emoticon_api import EmoticonAPI
 
 
 class APIHandler(tornado.web.RequestHandler):
+    """
+    A request handler to respond to the slash command as configured in slack
+    by the slack team.
+    """
 
     @tornado.gen.coroutine
     def post(self):
@@ -17,27 +21,40 @@ class APIHandler(tornado.web.RequestHandler):
         text = [o for o in text if o]  # remove empty strings
         name, text = text[0], text[1:]
 
+        # Print the available emoticons as a slackbot ephemeral message
         if name == 'help':
             return self.finish(emoticon_api.get_help_message())
 
+        # Add a new emoticon
         elif name == 'add':
             message = emoticon_api.create(*text)
             return self.finish(message)
 
-        elif name in 'rm':
-            message = emoticon_api.remove(*text)
-            return self.finish(message)
-
-        elif name == 'set':
-            message = emoticon_api.replace(*text)
-            return self.finish(message)
-
+        # Add a new alias to an existing emoticon
         elif name == 'alias':
             message = emoticon_api.alias(*text)
             return self.finish(message)
 
-        # default to fetch an emoticon
-        slack = SlackClient(os.environ['SLACK_TEAM_API_TOKEN'])
+        # Remove an existing emoticon or alias. When an alias is sent,
+        # only the alias will be removed and the original emoticon will
+        # still be available.
+        elif name in 'rm':
+            message = emoticon_api.remove(*text)
+            return self.finish(message)
+
+        # Replace the emoticon that a given name represents. The original name
+        # is required for replacing the emoticon.
+        elif name == 'set':
+            message = emoticon_api.replace(*text)
+            return self.finish(message)
+
+        # Fetch an emoticon by it's name or one of its aliases and send it
+        # to the source channel as if the authed user had posted it.
+        try:
+            slack = SlackClient(os.environ['SLACK_TEAM_API_TOKEN'])
+        except KeyError:
+            return self.finish('`SLACK_TEAM_API_TOKEN` is not set in the server')
+
         message = emoticon_api.get(name, *text)
         if not message:
             message = 'Emoticon `%s` not found. Enter `%s help` ' \
