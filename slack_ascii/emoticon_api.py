@@ -12,6 +12,10 @@ class EmoticonAPI(object):
         if not emoticon:
             return
 
+        if '\n' in emoticon['content']:
+            # Displaying multiline emoticons/ascii art improves readability
+            emoticon['content'] = '```%s```' % emoticon['content']
+
         message = '%s %s' % (emoticon['content'], additional_text)
         return message
 
