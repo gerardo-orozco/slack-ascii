@@ -18,6 +18,7 @@ class EmoticonAPI(object):
     def create(self, *args):
         try:
             name, content = args[0], ' '.join(args[1:])
+            name = name.lower()
         except IndexError:
             content = None
         if not content:

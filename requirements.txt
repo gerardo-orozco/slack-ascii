@@ -4,3 +4,4 @@ psycopg2==2.6.1
 slackclient==0.16
 tornado==4.2.1
 websocket-client==0.34.0
+pytoml==0.1.7

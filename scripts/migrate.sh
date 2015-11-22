@@ -5,7 +5,7 @@ if [[ -z "$DATABASE_URL" ]]; then
     exit 1
 fi
 
-for migration in $(ls migrations); do
+for migration in $(ls slack_ascii/migrations); do
     echo "Migrating $migration..."
     psql $DATABASE_URL < migrations/$migration
 done

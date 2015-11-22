@@ -17,6 +17,6 @@
     "heroku-postgresql:hobby-dev"
   ],
   "scripts": {
-    "postdeploy": "./scripts/migrate.sh"
+    "postdeploy": "./scripts/migrate.sh && /usr/bin/env python slack_ascii/load_default_emoticons.py"
   }
 }
