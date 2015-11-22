@@ -5,7 +5,8 @@ if [[ -z "$DATABASE_URL" ]]; then
     exit 1
 fi
 
-for migration in $(ls slack_ascii/migrations); do
+MIGRATIONS_DIR='slack_ascii/migrations'
+for migration in $(ls $MIGRATIONS_DIR); do
     echo "Migrating $migration..."
-    psql $DATABASE_URL < migrations/$migration
+    psql $DATABASE_URL < $MIGRATIONS_DIR/$migration
 done

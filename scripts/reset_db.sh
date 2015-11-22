@@ -5,7 +5,7 @@ if [[ -z "$DATABASE_URL" ]]; then
     exit 1
 fi
 
-for migration in $(ls migrations); do
+for migration in $(ls slack_ascii/migrations); do
     echo -en 'Removing all tables...\n'
     psql $DATABASE_URL --command="DROP TABLE IF EXISTS emoticon_alias"
     psql $DATABASE_URL --command="DROP TABLE IF EXISTS emoticon"

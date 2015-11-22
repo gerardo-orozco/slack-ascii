@@ -3,15 +3,6 @@ import psycopg2
 import tornado.gen
 
 
-def cached(func, cache={}):
-    def decorated():
-        if func.__name__ not in cache:
-            cache[func.__name__] = func()
-        return cache[func.__name__]
-    return decorated
-
-
-@cached
 def get_connection():
     db_url = os.environ.get('DATABASE_URL')
     if not db_url:
