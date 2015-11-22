@@ -68,16 +68,26 @@ def get_help_info():
     conn = get_connection()
     cursor = conn.cursor()
     sql = """SELECT e.name, e.content, a.name
-    FROM emoticon e LEFT JOIN emoticon_alias a on e.id = a.emoticon_id"""
+    FROM emoticon e LEFT JOIN emoticon_alias a on e.id = a.emoticon_id
+    ORDER BY e.name"""
     cursor.execute(sql)
-    aliases_by_name = {}
+    emoticons = []
+    emoticons_by_name = {}
     for name, content, alias in cursor.fetchall():
-        if name not in aliases_by_name:
-            aliases_by_name[name] = {
+        if name not in emoticons_by_name:
+            emoticons_by_name[name] = {
                 'aliases': [],
                 'content': content
             }
         if alias:
-            aliases_by_name[name]['aliases'].append(alias)
+            emoticons_by_name[name]['aliases'].append(alias)
 
-    return aliases_by_name
+    for name, emoticon in emoticons_by_name.iteritems():
+        emoticons.append({
+            'name': name,
+            'aliases': emoticon['aliases'],
+            'content': emoticon['content']
+        })
+
+    emoticons.sort(key=lambda o: o['name'])
+    return emoticons

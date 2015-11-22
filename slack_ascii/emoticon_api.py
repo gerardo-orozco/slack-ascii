@@ -77,14 +77,14 @@ class EmoticonAPI(object):
             return 'Aliased `%s` -> `%s`' % (alias, name)
 
     def get_help_message(self):
-        aliases_by_name = db.get_help_info()
-        if not aliases_by_name:
+        emoticons = db.get_help_info()
+        if not emoticons:
             return 'Sorry, there are no emoticons loaded yet :-('
 
         message = ''
-        for name, emoticon in aliases_by_name.iteritems():
+        for emoticon in emoticons:
             # start with the emoticon name
-            msg_line = '*%s*' % name
+            msg_line = '*%s*' % emoticon['name']
 
             aliases = ', '.join(emoticon['aliases'])
             if aliases:
@@ -93,6 +93,9 @@ class EmoticonAPI(object):
                 msg_line += ' (aliases: %s)' % aliases
 
             # finally, append the emoticon
-            msg_line += ':\n>%s\n' % emoticon['content']
+            if '\n' in emoticon['content']:
+                msg_line += '\n```%s```\n' % emoticon['content']
+            else:
+                msg_line += '\n>%s\n' % emoticon['content']
             message += msg_line
         return message
