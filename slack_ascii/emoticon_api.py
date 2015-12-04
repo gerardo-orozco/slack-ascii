@@ -6,8 +6,7 @@ class EmoticonAPI(object):
     def __init__(self, command_name):
         self._command_name = command_name
 
-    def get(self, *args):
-        name, additional_text = args[0], ' '.join(args[1:])
+    def get(self, name):
         emoticon = db.get_emoticon(name)
         if not emoticon:
             return
@@ -16,8 +15,7 @@ class EmoticonAPI(object):
             # Displaying multiline emoticons/ascii art improves readability
             emoticon['content'] = '```%s```' % emoticon['content']
 
-        message = '%s %s' % (emoticon['content'], additional_text)
-        return message
+        return emoticon['content']
 
     def create(self, *args):
         try:

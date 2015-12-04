@@ -55,7 +55,19 @@ class APIHandler(tornado.web.RequestHandler):
         except KeyError:
             return self.finish('`SLACK_TEAM_API_TOKEN` is not set in the server')
 
-        message = emoticon_api.get(name, *text)
+        emoticon = emoticon_api.get(name)
+        try:
+            emoticon = unicode(emoticon)
+        except UnicodeDecodeError:
+            emoticon = emoticon.decode('utf-8')
+
+        message = '%(command)s %(name)s %(emoticon)s %(text)s' % {
+            'command': command_name,
+            'name': name,
+            'emoticon': emoticon,
+            'text': ' '.join(text)
+        }
+
         if not message:
             message = 'Emoticon `%s` not found. Enter `%s help` ' \
                 'for a list of available ASCII emoticons'
